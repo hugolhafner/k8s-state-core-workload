@@ -1,2 +1,7 @@
 environments:
   - environment: development
+
+labels:
+  region: europe-west4
+  continent: europe
+  provider: gcp

@@ -45,8 +45,14 @@ spec:
             valueFiles:
               - {{ printf "$values/apps/%s/values.yaml" "{{ .appName }}" | quote }}
               - {{ printf "$values/apps/%s/environments/%s.yaml" "{{ .appName }}" "{{ .environment }}" | quote }}
+              {{- range $k, $v := .Values.labels }}
+              - {{ printf "$values/apps/%s/mixins/%s/%s.yaml" "{{ .appName }}" $k $v | quote }}
+              {{- end }}
               - "$values/clusters/{{ .Values.clusterName }}/apps/{{ printf "%s" "{{ .appName }}" }}/values.yaml"
               - "$values/clusters/{{ .Values.clusterName }}/apps/{{ printf "%s/environments/%s.yaml" "{{ .appName }}" "{{ .environment }}" }}"
+              {{- range $k, $v := .Values.labels }}
+              - "$values/clusters/{{ $.Values.clusterName }}/apps/{{ printf "%s/mixins/%s/%s.yaml" "{{ .appName }}" $k $v }}"
+              {{- end }}
         - repoURL: https://github.com/hugolhafner/k8s-state-core-workload.git
           targetRevision: HEAD
           ref: values

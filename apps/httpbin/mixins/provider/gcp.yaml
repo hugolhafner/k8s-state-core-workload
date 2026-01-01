@@ -1,0 +1,5 @@
+ingress:
+  # provider specific annotations or something
+  annotations:
+    kubernetes.io/ingress.class: "gce"
+    networking.gke.io/managed-certificates: "httpbin-cert"

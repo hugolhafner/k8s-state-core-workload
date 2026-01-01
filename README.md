@@ -11,7 +11,3 @@
 - `development`
 - `staging`
 - `production`
-
-### Supported Overlays
-
-- `overlays/gcp.yaml`: GCP specific cluster values
