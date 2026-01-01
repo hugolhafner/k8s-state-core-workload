@@ -43,15 +43,15 @@ spec:
             releaseName: {{ printf "%s-%s" "{{ .appName }}" "{{ .environment }}" | quote }}
             ignoreMissingValueFiles: true
             valueFiles:
-              - {{ printf "$values/%s/values.yaml" "{{ .baseApp.path }}" | quote }}
-              - {{ printf "$values/%s/environments/%s.yaml" "{{ .baseApp.path }}" "{{ .environment }}" | quote }}
+              - {{ printf "$values/%s/values.yaml" "{{ .baseApp.path.path }}" | quote }}
+              - {{ printf "$values/%s/environments/%s.yaml" "{{ .baseApp.path.path }}" "{{ .environment }}" | quote }}
               {{- range $k, $v := .Values.labels }}
-              - {{ printf "$values/%s/mixins/%s/%s.yaml" "{{ .baseApp.path }}" $k $v | quote }}
+              - {{ printf "$values/%s/mixins/%s/%s.yaml" "{{ .baseApp.path.path }}" $k $v | quote }}
               {{- end }}
-              - {{ printf "$values/%s/values.yaml" "{{ .clusterApp.path }}" | quote }}
-              - {{ printf "$values/%s/environments/%s.yaml" "{{ .clusterApp.path }}" "{{ .environment }}" | quote }}
+              - {{ printf "$values/%s/values.yaml" "{{ .clusterApp.path.path }}" | quote }}
+              - {{ printf "$values/%s/environments/%s.yaml" "{{ .clusterApp.path.path }}" "{{ .environment }}" | quote }}
               {{- range $k, $v := .Values.labels }}
-              - {{ printf "$values/%s/mixins/%s/%s.yaml" "{{ .clusterApp.path }}" $k $v | quote }}
+              - {{ printf "$values/%s/mixins/%s/%s.yaml" "{{ .clusterApp.path.path }}" $k $v | quote }}
               {{- end }}
         - repoURL: https://github.com/hugolhafner/k8s-state-core-workload.git
           targetRevision: HEAD
