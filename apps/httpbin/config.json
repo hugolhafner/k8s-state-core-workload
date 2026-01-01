@@ -1,6 +1,7 @@
 {
   "appName": "httpbin",
   "source": {
-    "repoURL": "https://matheusfm.dev/charts"
+    "repoURL": "https://estahn.github.io/charts",
+    "chart": "httpbingo"
   }
 }

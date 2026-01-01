@@ -1,6 +1,6 @@
 {
   "appName": "httpbin",
   "source": {
-    "targetRevision": "HEAD"
+    "targetRevision": "0.1.1"
   }
 }
