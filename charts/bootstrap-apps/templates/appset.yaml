@@ -1,0 +1,72 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: k8s-state-core-workload
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - matrix:
+        generators:
+          - merge:
+              mergeKeys:
+                - appName
+              generators:
+                - git:
+                    repoURL: https://github.com/hugolhafner/k8s-state-core-workload.git
+                    revision: HEAD
+                    files:
+                      - path: apps/*/config.json
+                    pathParamPrefix: baseApp
+                    values:
+                      appName: {{ .path.basenameNormalized }}
+
+                - git:
+                    repoURL: https://github.com/hugolhafner/k8s-state-core-workload.git
+                    revision: HEAD
+                    files:
+                      - path: clusters/{{ .Values.clusterName }}/apps/{{ printf "%s" "{{ .values.appName }}" }}/config.json
+                    pathParamPrefix: clusterApp
+
+          - list:
+              elements:
+              {{- with .Values.environments }}
+              {{ . | toYaml | indent 16 }}
+              {{- end }}
+
+  template:
+    metadata:
+      name: {{ printf "%s-%s" "{{ .appName }}" "{{ .environment }}" }}
+    spec:
+      project: k8s-state-core-workload
+      sources:
+        - repoURL: {{ printf "%s" "{{ .source.repoURL }}" }}
+          targetRevision: {{ printf "%s" "{{ .appName }}" }}
+          chart: {{ printf "%s" "{{ .appName }}" }}
+          helm:
+            releaseName: {{ printf "%s-%s" "{{ .appName }}" "{{ .environment }}" }}
+            ignoreMissingValueFiles: true
+            valueFiles:
+              - {{ printf "$values/apps/%s/values.yaml" "{{ .appName }}" }}
+              - {{ printf "$values/apps/%s/environments/%s.yaml" "{{ .appName }}" "{{ .environment }}" }}
+              - "$values/clusters/{{ .Values.clusterName }}/apps/{{ printf "%s" "{{ .appName }}" }}/values.yaml"
+              - "$values/clusters/{{ .Values.clusterName }}/apps/{{ printf "%s/environments/%s.yaml" "{{ .appName }}" "{{ .environment }}" }}"
+        - repoURL: https://github.com/hugolhafner/k8s-state-core-workload.git
+          targetRevision: HEAD
+          ref: values
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: {{ printf "%s" "{{ .environment }}" }}
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+
+      ignoreDifferences:
+        - group: argoproj.io
+          kind: Application
+          jsonPointers:
+            /spec/syncPolicy/automated

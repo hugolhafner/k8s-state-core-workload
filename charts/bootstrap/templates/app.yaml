@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: k8s-state-core-workload-bootstrap
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  project: k8s-state-core-workload
+  source:
+    path: charts/bootstrap-apps
+    repoURL: https://github.com/hugolhafner/k8s-state-core-workload
+    targetRevision: HEAD
+    helm:
+      releaseName: k8s-state-core-workload
+      valuesObject:
+        clusterName: "{{ .Values.clusterName }}"
+      valueFiles:
+        - "clusters/{{ .Values.clusterName }}/bootstrap.yaml"
