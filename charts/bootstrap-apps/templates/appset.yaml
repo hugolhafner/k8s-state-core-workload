@@ -24,7 +24,7 @@ spec:
                     repoURL: https://github.com/hugolhafner/k8s-state-core-workload.git
                     revision: HEAD
                     files:
-                      - path: "clusters/{{ .Values.clusterName }}/apps/{{ printf "%s" "{{ .baseApp.path.basenameNormalized }}" }}/config.json"
+                      - path: "clusters/{{ .Values.clusterName }}/apps/httpbin/config.json"
                     pathParamPrefix: clusterApp
 
           - list:
