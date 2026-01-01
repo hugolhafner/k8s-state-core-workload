@@ -24,3 +24,16 @@ spec:
     - repoURL: https://github.com/hugolhafner/k8s-state-core-workload.git
       targetRevision: HEAD
       ref: values
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    retry:
+      refresh: true
+
+  ignoreDifferences:
+    - group: argoproj.io
+      kind: Application
+      jsonPointers:
+        - /spec/syncPolicy
