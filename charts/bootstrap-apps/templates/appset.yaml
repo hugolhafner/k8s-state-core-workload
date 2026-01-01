@@ -39,8 +39,8 @@ spec:
       project: k8s-state-core-workload
       sources:
         - repoURL: {{ printf "%s" "{{ .source.repoURL }}" | quote }}
-          targetRevision: {{ printf "%s" "{{ .appName }}" | quote }}
-          chart: {{ printf "%s" "{{ .appName }}" | quote }}
+          targetRevision: {{ printf "%s" "{{ .source.targetRevision }}" | quote }}
+          chart: {{ printf "%s" "{{ .source.chart | default .appName }}" | quote }}
           helm:
             releaseName: {{ printf "%s-%s" "{{ .appName }}" "{{ .environment }}" | quote }}
             ignoreMissingValueFiles: true
