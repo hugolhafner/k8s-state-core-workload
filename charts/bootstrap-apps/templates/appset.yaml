@@ -20,36 +20,33 @@ spec:
                       - path: apps/*/config.json
                     pathParamPrefix: baseApp
                     values:
-                      appName: {{ .baseApp.path.basenameNormalized }}
+                      appName: {{ printf "%s" "{{ .baseApp.path.basenameNormalized }}" | quote }}
 
                 - git:
                     repoURL: https://github.com/hugolhafner/k8s-state-core-workload.git
                     revision: HEAD
                     files:
-                      - path: clusters/{{ .Values.clusterName }}/apps/{{ printf "%s" "{{ .values.appName }}" }}/config.json
+                      - path: "clusters/{{ .Values.clusterName }}/apps/{{ printf "%s" "{{ .values.appName }}" }}/config.json"
                     pathParamPrefix: clusterApp
 
           - list:
-              elements:
-              {{- with .Values.environments }}
-              {{ . | toYaml | indent 16 }}
-              {{- end }}
+              elements: {{ .Values.environments | toYaml | nindent 16 }}
 
   template:
     metadata:
-      name: {{ printf "%s-%s" "{{ .appName }}" "{{ .environment }}" }}
+      name: {{ printf "%s-%s" "{{ .appName }}" "{{ .environment }}" | quote }}
     spec:
       project: k8s-state-core-workload
       sources:
-        - repoURL: {{ printf "%s" "{{ .source.repoURL }}" }}
-          targetRevision: {{ printf "%s" "{{ .appName }}" }}
-          chart: {{ printf "%s" "{{ .appName }}" }}
+        - repoURL: {{ printf "%s" "{{ .source.repoURL }}" | quote }}
+          targetRevision: {{ printf "%s" "{{ .appName }}" | quote }}
+          chart: {{ printf "%s" "{{ .appName }}" | quote }}
           helm:
-            releaseName: {{ printf "%s-%s" "{{ .appName }}" "{{ .environment }}" }}
+            releaseName: {{ printf "%s-%s" "{{ .appName }}" "{{ .environment }}" | quote }}
             ignoreMissingValueFiles: true
             valueFiles:
-              - {{ printf "$values/apps/%s/values.yaml" "{{ .appName }}" }}
-              - {{ printf "$values/apps/%s/environments/%s.yaml" "{{ .appName }}" "{{ .environment }}" }}
+              - {{ printf "$values/apps/%s/values.yaml" "{{ .appName }}" | quote }}
+              - {{ printf "$values/apps/%s/environments/%s.yaml" "{{ .appName }}" "{{ .environment }}" | quote }}
               - "$values/clusters/{{ .Values.clusterName }}/apps/{{ printf "%s" "{{ .appName }}" }}/values.yaml"
               - "$values/clusters/{{ .Values.clusterName }}/apps/{{ printf "%s/environments/%s.yaml" "{{ .appName }}" "{{ .environment }}" }}"
         - repoURL: https://github.com/hugolhafner/k8s-state-core-workload.git
@@ -57,7 +54,7 @@ spec:
           ref: values
       destination:
         server: https://kubernetes.default.svc
-        namespace: {{ printf "%s" "{{ .environment }}" }}
+        namespace: {{ printf "%s" "{{ .environment }}" | quote }}
       syncPolicy:
         automated:
           prune: true
