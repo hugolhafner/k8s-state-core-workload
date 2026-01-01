@@ -1,0 +1,8 @@
+{
+  "appName": "redis-cache",
+  "source": {
+    "repoURL": "registry-1.docker.io/bitnamicharts",
+    "chart": "redis",
+    "targetRevision": "24.1.0"
+  }
+}
