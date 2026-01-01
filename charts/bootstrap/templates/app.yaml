@@ -10,13 +10,17 @@ spec:
     server: https://kubernetes.default.svc
     namespace: argocd
   project: k8s-state-core-workload
-  source:
-    path: charts/bootstrap-apps
-    repoURL: https://github.com/hugolhafner/k8s-state-core-workload
-    targetRevision: HEAD
-    helm:
-      releaseName: k8s-state-core-workload
-      valuesObject:
-        clusterName: "{{ .Values.clusterName }}"
-      valueFiles:
-        - "clusters/{{ .Values.clusterName }}/bootstrap.yaml"
+  sources:
+    - path: charts/bootstrap-apps
+      repoURL: https://github.com/hugolhafner/k8s-state-core-workload
+      targetRevision: HEAD
+      helm:
+        releaseName: k8s-state-core-workload
+        valuesObject:
+          clusterName: "{{ .Values.clusterName }}"
+        valueFiles:
+          - "$values/clusters/{{ .Values.clusterName }}/bootstrap.yaml"
+
+    - repoURL: https://github.com/hugolhafner/k8s-state-core-workload.git
+      targetRevision: HEAD
+      ref: values

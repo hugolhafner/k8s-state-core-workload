@@ -20,7 +20,7 @@ spec:
                       - path: apps/*/config.json
                     pathParamPrefix: baseApp
                     values:
-                      appName: {{ .path.basenameNormalized }}
+                      appName: {{ .baseApp.path.basenameNormalized }}
 
                 - git:
                     repoURL: https://github.com/hugolhafner/k8s-state-core-workload.git
