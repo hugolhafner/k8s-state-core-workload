@@ -1,6 +1,6 @@
 {
   "appName": "httpbin",
-  "base": {
+  "source": {
     "repoURL": "https://matheusfm.dev/charts"
   }
 }

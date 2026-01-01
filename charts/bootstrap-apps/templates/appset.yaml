@@ -24,7 +24,7 @@ spec:
                     repoURL: https://github.com/hugolhafner/k8s-state-core-workload.git
                     revision: HEAD
                     files:
-                      - path: "clusters/{{ .Values.clusterName }}/apps/httpbin/config.json"
+                      - path: "clusters/{{ .Values.clusterName }}/apps/*/config.json"
                     pathParamPrefix: clusterApp
 
           - list:
@@ -36,9 +36,9 @@ spec:
     spec:
       project: k8s-state-core-workload
       sources:
-        - repoURL: {{ printf "%s" "{{ .source.repoURL | default .base.repoURL }}" | quote }}
+        - repoURL: {{ printf "%s" "{{ .source.repoURL }}" | quote }}
           targetRevision: {{ printf "%s" "{{ .source.targetRevision }}" | quote }}
-          chart: {{ printf "%s" "{{ .source.chart | default (.base.chart | default .appName) }}" | quote }}
+          chart: {{ printf "%s" "{{ index .source \"chart\" | default .appName }}" | quote }}
           helm:
             releaseName: {{ printf "%s-%s" "{{ .appName }}" "{{ .environment }}" | quote }}
             ignoreMissingValueFiles: true
