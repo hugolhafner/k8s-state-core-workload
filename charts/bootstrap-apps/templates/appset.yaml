@@ -19,14 +19,12 @@ spec:
                     files:
                       - path: apps/*/config.json
                     pathParamPrefix: baseApp
-                    values:
-                      appName: {{ printf "%s" "{{ .baseApp.path.basenameNormalized }}" | quote }}
 
                 - git:
                     repoURL: https://github.com/hugolhafner/k8s-state-core-workload.git
                     revision: HEAD
                     files:
-                      - path: "clusters/{{ .Values.clusterName }}/apps/{{ printf "%s" "{{ .values.appName }}" }}/config.json"
+                      - path: "clusters/{{ .Values.clusterName }}/apps/{{ printf "%s" "{{ .baseApp.path.basenameNormalized }}" }}/config.json"
                     pathParamPrefix: clusterApp
 
           - list:
